@@ -11,11 +11,18 @@ pub fn main() {
     let p = 70937;
     let irr = vec![3, 39025, 15086, 45405, 34941, 70897, 1]; // x^6 + 70897x^5 + 34941x^4 + 45405x^3 + 15086x^2 + 39025x + 3
 
-    let invalid_witness = FieldElement::new(vec![1<<15], p, irr.clone()); 
+    let invalid_witness = FieldElement::new(vec![1 << 15], p, irr.clone());
 
     /* BEGIN HACK */
-    let witness = vec![];
-    let m = vec![FieldElement::new(vec![0], p, irr.clone()); 1<<6]; 
+    let mut witness = vec![];
+    // Add 2^15 p times to have terms cancelled
+    for _ in 0..p {
+        witness.push(FieldElement::new(vec![1 << 15], p, irr.clone()));
+    }
+
+    let m = vec![FieldElement::new(vec![p], p, irr.clone()); 1 << 6];
+    // we could also do
+    // let m = protocol.count_multiplicities(&witness, &statement);
     /* END HACK */
 
     let mut table = vec![];
